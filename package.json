@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "Prototype example of a switchboard communications interface",
   "main": "index.js",
+  "type": "module",
   "scripts": {
+    "start": "node ./src/server/server.js start",
     "test": "jest test"
   },
   "repository": {
