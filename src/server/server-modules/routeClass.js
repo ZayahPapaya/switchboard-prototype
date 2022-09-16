@@ -11,41 +11,30 @@ class Route {
   }
 }
 
-class AdditionRoute extends Route {
-  name = "addition";
-  invoke(message) {
-    // some functions will emit back to the client who should have their own recieving switch case, similar to the server's
-    message.payload = 2 + 2;
-    outboundSwitchboard(message);
-  }
-}
-
-class doStuff extends Route {
-  name = "clientHistory";
-  invoke(message) {
-    doMath() + doMath();
-    console.log('pog');
-    onClientHistory();
+class ExampleRoute extends Route { // This is an example of how classes should be written
+  name = "example"; // A name that the package 'targets'
+  invoke(message) { // invoke always takes in the client packet
+    console.log(message); // run your code, preferably as a function imported from another file. Your function should return its output. The output should be a mutated version of the packet.
+    outboundSwitchboard(message); // submit your function's return into outbound switchboard. The client packet should have an outbound arg.
   }
 }
 
 ///////////////////////////////////////////////
-// For auto exporting all Routes in the switchboard
-// function getAllSubclasses(baseClass) {
-//   var globalObject = Function('return this')(); 
-//   var allVars = Object.keys(globalObject);
-//   var classes = allVars.filter(function (key) {
-//   try {
-//     var obj = globalObject[key];
-//         return obj.prototype instanceof baseClass;
-//     } catch (e) {
-//         return false;
-//     }
-//   });
-//   return classes;
-// }
+//For auto exporting all Routes in the switchboard
+function getAllSubclasses(baseClass) { // v this scares me
+  let globalObject = Function('return this')(); // Function constructor ignores 'use strict' while evaluating the string as code. This refers to the global object.
+  return Object.keys(globalObject).filter(key => { // Grabs all 'variable names' in your code and filters
+    try {// Filters only instances of the base class you handed it
+      return globalObject[key].prototype instanceof baseClass;
+    } catch (e) {
+      return false;
+    }
+  });// returns array of references to subclasses
+}
+// https://stackoverflow.com/questions/31618212/find-all-classes-in-a-javascript-application-that-extend-a-base-class
+// Thank you stack overflow for the original version of this code, even if it's terrifying.
 
-// getAllSubclasses(Route).forEach(route => new route());
+getAllSubclasses(Route).forEach(route => new route());
 // attribute and use manual new's
 
 export const routeMap = pog;
